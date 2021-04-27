@@ -5,7 +5,7 @@ const {
   createBook,
   updateBook,
   deleteBook,
-} = require("../controllers/books");
+} = require("../controllers/booksController");
 
 const router = express.Router();
 
