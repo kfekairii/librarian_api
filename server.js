@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const colors = require("colors");
 const connectDB = require("./config/db");
+const errorHandler = require("./middlewares/errorHandler");
 
 // Load Routes
 const bookRoutes = require("./routes/books");
@@ -26,6 +27,9 @@ app.use(express.json());
 
 // Mount router
 app.use("/api/v1/books", bookRoutes);
+
+// Error Hundler
+app.use(errorHandler);
 
 /*=====================================================*/
 

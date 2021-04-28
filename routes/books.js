@@ -9,13 +9,8 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(getBooks);
+router.route("/").get(getBooks).post(createBook);
 
-router
-  .route("/:id")
-  .get(getBook)
-  .post(createBook)
-  .put(updateBook)
-  .delete(deleteBook);
+router.route("/:id").get(getBook).put(updateBook).delete(deleteBook);
 
 module.exports = router;
