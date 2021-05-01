@@ -6,7 +6,7 @@ const errorHandler = (err, req, res, next) => {
 
   // Mogoose bad ObjectID
   if (err.name === "CastError") {
-    const message = `Book not found with id of ${err.value}`;
+    const message = `NOT found, ObjectId is ${err.value}`;
     const statusCode = 404;
     error = new ErrorResponse(message, statusCode);
   }
@@ -22,7 +22,6 @@ const errorHandler = (err, req, res, next) => {
   // Mogoose ValidationError
   if (err.name === "ValidationError") {
     const message = Object.values(err.errors).map((obj) => obj.message);
-    console.log(message);
     const statusCode = 400;
     error = new ErrorResponse(message, statusCode);
   }

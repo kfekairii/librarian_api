@@ -56,8 +56,6 @@ exports.getBooks = asyncHandler(async (req, res, next) => {
 
   // Pagination result
   const pagination = {};
-  console.log(startIndex);
-  console.log(endIndex);
 
   if (startIndex > 0) {
     pagination.prev = { page: page - 1, limit };

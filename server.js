@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === "development") {
 // use body parser
 app.use(express.json());
 
-// Mount router
+// Mount routes
 app.use("/api/v1/books", bookRoutes);
 app.use("/api/v1/authors", authorRoutes);
 
