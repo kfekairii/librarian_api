@@ -7,6 +7,7 @@ const errorHandler = require("./middlewares/errorHandler");
 
 // Load Routes
 const bookRoutes = require("./routes/books");
+const authorRoutes = require("./routes/authors");
 
 // Load env file
 dotenv.config({ path: "./config/config.env" });
@@ -27,6 +28,7 @@ app.use(express.json());
 
 // Mount router
 app.use("/api/v1/books", bookRoutes);
+app.use("/api/v1/authors", authorRoutes);
 
 // Error Hundler
 app.use(errorHandler);

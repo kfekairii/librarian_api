@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 
 const BookSchema = new mongoose.Schema(
   {
@@ -16,17 +17,14 @@ const BookSchema = new mongoose.Schema(
       maxlength: [450, "Title can not be more than 450 characters"],
     },
     slug: String,
-    Authors: [
-      {
-        type: String,
-        required: true,
-        trim: true,
-        maxlength: [250, "Author can not be more than 250 characters"],
-      },
-    ],
+    author: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Author",
+    },
+
     description: String,
     publisher: String,
-    publishDate: { type: Date },
+    publishDate: String,
     ISNB: String,
     pageCount: Number,
     categories: [
@@ -46,5 +44,10 @@ const BookSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+BookSchema.pre("save", function (next) {
+  this.slug = slugify(this.title, { lower: true });
+  next();
+});
 
 module.exports = mongoose.model("Book", BookSchema);
