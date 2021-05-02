@@ -17,6 +17,7 @@ const AuthorSchema = mongoose.Schema(
     // To Create a virtual fields
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    id: false,
   }
 );
 

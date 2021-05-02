@@ -71,7 +71,10 @@ exports.getAuthors = asyncHandler(async (req, res, next) => {
   const endIndex = page * limit;
   const total = await AuthorModel.countDocuments();
 
-  query = query.skip(startIndex).limit(limit);
+  query = query
+    .skip(startIndex)
+    .limit(limit)
+    .populate({ path: "books", select: "_id title" });
   const authors = await query;
 
   // Pagination result

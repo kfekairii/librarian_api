@@ -1,4 +1,7 @@
 const express = require("express");
+const router = express.Router();
+const advencedSearch = require("../middlewares/advancedSearch");
+const BookModel = require("../models/BookModel");
 const {
   getBooks,
   getBook,
@@ -7,9 +10,13 @@ const {
   deleteBook,
 } = require("../controllers/booksController");
 
-const router = express.Router();
-
-router.route("/").get(getBooks).post(createBook);
+router
+  .route("/")
+  .get(
+    advencedSearch(BookModel, { path: "author", select: "_id title" }),
+    getBooks
+  )
+  .post(createBook);
 
 router.route("/:id").get(getBook).put(updateBook).delete(deleteBook);
 
