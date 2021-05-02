@@ -10,7 +10,13 @@ const {
   deleteBook,
 } = require("../controllers/booksController");
 
-router.route("/").get(getBooks).post(createBook);
+router
+  .route("/")
+  .get(
+    advencedSearch(BookModel, { path: "author", select: "_id fullName" }),
+    getBooks
+  )
+  .post(createBook);
 
 router.route("/:id").get(getBook).put(updateBook).delete(deleteBook);
 

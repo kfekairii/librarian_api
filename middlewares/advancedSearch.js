@@ -1,4 +1,4 @@
-const advancedSearch = (model, populate) => async (res, req, next) => {
+const advancedSearch = (model, populate) => async (req, res, next) => {
   let query;
 
   const reqQuery = { ...req.query };
@@ -62,9 +62,9 @@ const advancedSearch = (model, populate) => async (res, req, next) => {
     pagination.next = { page: page + 1, limit };
   }
 
-  res.advencedSearch = {
+  req.advencedSearch = {
     success: true,
-    count: books.length,
+    count: result.length,
     pagination,
     data: result,
   };
