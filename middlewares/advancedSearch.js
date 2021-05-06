@@ -61,6 +61,7 @@ const advancedSearch = (model, populate) => async (req, res, next) => {
   if (endIndex < total) {
     pagination.next = { page: page + 1, limit };
   }
+  console.log(result);
 
   req.advencedSearch = {
     success: true,

@@ -12,6 +12,8 @@ const AuthorSchema = mongoose.Schema(
       type: String,
       maxlength: [1000, "Bio can not be more than 1000 characters"],
     },
+    image_url: String,
+    cloudinary_id: String,
   },
   {
     // To Create a virtual fields

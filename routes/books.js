@@ -9,6 +9,7 @@ const {
   updateBook,
   deleteBook,
 } = require("../controllers/booksController");
+const { protect } = require("../middlewares/auth");
 
 router
   .route("/")
@@ -16,7 +17,7 @@ router
     advencedSearch(BookModel, { path: "author", select: "_id fullName" }),
     getBooks
   )
-  .post(createBook);
+  .post(protect, createBook);
 
 router.route("/:id").get(getBook).put(updateBook).delete(deleteBook);
 

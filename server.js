@@ -4,10 +4,12 @@ const morgan = require("morgan");
 const colors = require("colors");
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/errorHandler");
+const cookieParser = require("cookie-parser");
 
 // Load Routes
 const bookRoutes = require("./routes/books");
 const authorRoutes = require("./routes/authors");
+const authRoutes = require("./routes/auth");
 
 // Load env file
 dotenv.config({ path: "./config/config.env" });
@@ -26,10 +28,13 @@ if (process.env.NODE_ENV === "development") {
 // use body parser
 app.use(express.json());
 
+// use cokkie-parse
+app.use(cookieParser());
+
 // Mount routes
 app.use("/api/v1/books", bookRoutes);
 app.use("/api/v1/authors", authorRoutes);
-
+app.use("/api/v1/auth", authRoutes);
 // Error Hundler
 app.use(errorHandler);
 
