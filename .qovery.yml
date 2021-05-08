@@ -1,0 +1,11 @@
+---
+application:
+  name: "librarian-api"
+  project: "librarian"
+  organization: "QoveryCommunity"
+routers:
+- name: "main-librarian-api"
+  routes:
+  - application_name: "librarian-api"
+    paths:
+    - "/*"
