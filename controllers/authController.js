@@ -70,3 +70,11 @@ const sendTokenResponse = (user, statusCode, res) => {
     token,
   });
 };
+
+// @desc        Get Curent User
+// @route       POST /api/v1/auth/user
+// @access      Private
+
+exports.getCurrentUser = asyncHandler(async (req, res, next) => {
+  res.status(200).json({ success: true, data: req.user });
+});

@@ -8,8 +8,10 @@ const {
   createBook,
   updateBook,
   deleteBook,
+  uploadBookPhoto,
 } = require("../controllers/booksController");
-const { protect } = require("../middlewares/auth");
+const { protect, authorize } = require("../middlewares/auth");
+const upload = require("../config/multer");
 
 router
   .route("/")
@@ -17,8 +19,21 @@ router
     advencedSearch(BookModel, { path: "author", select: "_id fullName" }),
     getBooks
   )
-  .post(protect, createBook);
+  .post(protect, authorize("publisher", "admin"), createBook);
 
-router.route("/:id").get(getBook).put(updateBook).delete(deleteBook);
+router
+  .route("/:id")
+  .get(getBook)
+  .put(protect, authorize("publisher", "admin"), updateBook)
+  .delete(protect, authorize("publisher", "admin"), deleteBook);
+
+router
+  .route("/:bookId/photo")
+  .put(
+    protect,
+    authorize("publisher", "admin"),
+    upload.single("image"),
+    uploadBookPhoto
+  );
 
 module.exports = router;

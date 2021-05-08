@@ -11,6 +11,7 @@ const { getBooks } = require("../controllers/booksController");
 const advancedSearch = require("../middlewares/advancedSearch");
 const AuthorModel = require("../models/AuthorModel");
 const upload = require("../config/multer");
+const { protect, authorize } = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -20,13 +21,20 @@ router
     advancedSearch(AuthorModel, { path: "books", select: "_id title" }),
     getAuthors
   )
-  .post(createAuthor);
+  .post(protect, authorize("publisher", "admin"), createAuthor);
 router
   .route("/:authorId")
   .get(getAuthor)
-  .put(updateAuthor)
-  .delete(deleteAuthor);
+  .put(protect, authorize("publisher", "admin"), updateAuthor)
+  .delete(protect, authorize("publisher", "admin"), deleteAuthor);
 
-router.route("/:authorId/photo").put(upload.single("image"), uploadAuthorPhoto);
+router
+  .route("/:authorId/photo")
+  .put(
+    protect,
+    authorize("publisher", "admin"),
+    upload.single("image"),
+    uploadAuthorPhoto
+  );
 
 module.exports = router;

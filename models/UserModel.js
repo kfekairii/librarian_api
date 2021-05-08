@@ -33,6 +33,8 @@ const UserShcema = new mongoose.Schema({
     minlength: 6,
     select: false,
   },
+  totalAddedBooks: { type: Number },
+  totalAddedAuthors: { type: Number },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });
@@ -51,7 +53,7 @@ UserShcema.methods.getSignedJwtTokwn = function () {
   });
 };
 
-// Match User enterd Pasword to hashed password
+// Match entered Pasword to hashed password
 // [ret] : bool
 UserShcema.methods.matchPassword = async function (entredPassword) {
   return await bcrypt.compare(entredPassword, this.password);

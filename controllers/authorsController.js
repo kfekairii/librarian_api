@@ -10,6 +10,8 @@ const cloudinary = require("../config/couldinary");
 // @access      Private
 
 exports.createAuthor = asyncHandler(async (req, res, next) => {
+  // add user to the req body
+  req.body.user = req.user._id;
   let query = AuthorModel.create(req.body);
 
   const author = await query;
@@ -109,8 +111,15 @@ exports.uploadAuthorPhoto = asyncHandler(async (req, res, next) => {
     const errResp = new ErrorResponse("Author doesn't exist", 404);
     return next(errResp);
   }
-  console.log(req.file.path);
   const result = await cloudinary.uploader.upload(req.file.path, {
     folder: "sblib/authors",
   });
+  await author.updateOne(
+    { image_url: result.secure_url },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  res.status(201).json({ success: true, author });
 });

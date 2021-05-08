@@ -6,7 +6,6 @@ const UserModel = require("../models/UserModel");
 // protect routes
 exports.protect = asyncHandler(async (req, res, next) => {
   let token;
-  console.log(req.headers.authorization);
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -21,8 +20,25 @@ exports.protect = asyncHandler(async (req, res, next) => {
   if (!token) {
     return next(new ErrorResponse("Not authorized", 401));
   }
+  try {
+    // verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  console.log(decoded);
-  next();
+    // find user and pass it in the req
+    req.user = await UserModel.findById(decoded.UID);
+    next();
+  } catch (err) {
+    return next(new ErrorResponse("Not authorized", 401));
+  }
 });
+
+// Garant access for specific roles
+
+exports.authorize = (...roles) => (req, res, next) => {
+  // Get the user role
+  const role = req.user.role;
+  if (!roles.includes(role)) {
+    return next(new ErrorResponse(`Not authorized role ${role}`, 403));
+  }
+  next();
+};

@@ -1,6 +1,7 @@
 const asyncHandler = require("../middlewares/asycWrapper");
 const BookModel = require("../models/BookModel");
 const ErrorResponse = require("../utils/errorResponse");
+const cloudinary = require("../config/couldinary");
 
 // @desc        Get all books
 // @route       /api/v1/books
@@ -41,6 +42,8 @@ exports.getBook = asyncHandler(async (req, res, next) => {
 // @access      Private
 
 exports.createBook = asyncHandler(async (req, res, next) => {
+  // add user to the req body
+  req.body.user = req.user._id;
   const book = await BookModel.create(req.body);
   res.status(201).send({
     success: true,
@@ -79,10 +82,7 @@ exports.updateBook = asyncHandler(async (req, res, next) => {
 // @access      Public
 
 exports.deleteBook = asyncHandler(async (req, res, next) => {
-  const book = await BookModel.findByIdAndDelete(req.params.id).populate({
-    path: "author",
-    select: "_id fullName",
-  });
+  const book = await BookModel.findById(req.params.id);
   if (!book) {
     const errRes = new ErrorResponse(
       `Book not found with id of ${req.params.id}`,
@@ -90,9 +90,32 @@ exports.deleteBook = asyncHandler(async (req, res, next) => {
     );
     return next(errRes);
   }
-
+  book.remove();
   res.status(200).send({
     success: true,
     book,
   });
+});
+
+// @desc        Upload book's photo
+// @route       /api/v1/books/:id/photo
+// @access      Private
+
+exports.uploadBookPhoto = asyncHandler(async (req, res, next) => {
+  const book = await BookModel.findById(req.params.bookId);
+  if (!book) {
+    const errResp = new ErrorResponse("Book doesn't exist", 404);
+    return next(errResp);
+  }
+  const result = await cloudinary.uploader.upload(req.file.path, {
+    folder: "sblib/books",
+  });
+  await book.updateOne(
+    { image_url: result.secure_url },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  res.status(201).json({ success: true, book });
 });
